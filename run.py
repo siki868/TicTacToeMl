@@ -77,7 +77,7 @@ def check_table(table):
 
     main_diag = np.diag(table)
     second_diag = np.diag(np.fliplr(table))
-    
+
     if all([a=='x' for a in main_diag]):
             return 'x'
     elif all([a=='o' for a in main_diag]):
@@ -193,5 +193,36 @@ def play():
     else:
         print('Nereseno!')
 
+def bot_play():
+    """
+    2 bots playing against each other
+    """
+    i = 0
+    table = generate_table()
+    state = check_table(table)
+    model_a = keras.models.load_model('ttt.h5')
+    model_b = keras.models.load_model('ttt1.h5')
+    while not state:
+        table_state = get_table_state(table).reshape((1, 9))
+        if i%2 == 0:
+            action = np.argmax(model_b.predict(table_state))
+            x, y = np.unravel_index(action, (3, 3))
+            move('x', x, y, table)
+        else:
+            # print(table_state.shape)
+            action = np.argmax(model_b.predict(table_state))
+            x, y = np.unravel_index(action, (3, 3))
+            move('o', x, y, table)
+        print_table(table)
+        state = check_table(table)
+        time.sleep(1.5)
+        i += 1
+
+    if state == 'o':
+        print('O won the game')
+    elif state == 'x':
+        print('X won the game')
+    else:
+        print('Nereseno!')
 if __name__ == "__main__":
-    play()
+    bot_play()
