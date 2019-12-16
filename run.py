@@ -5,6 +5,9 @@ from tensorflow import keras
 
 
 def print_table(table):
+    """
+    Just prints it out
+    """
     print()
     t = list(table)
     for i in range(len(t)):
@@ -20,8 +23,8 @@ def print_table(table):
 
 def move(ch, x, y, table):
     """
-    x - kolona
-    y - red
+    x - row
+    y - column
     """
     if table[x, y]:
         pass
@@ -31,7 +34,9 @@ def move(ch, x, y, table):
 def bot_random_move(ch, table):
     """
     ch - x ili o
-    Igra random moguc potez
+    Plays random moves that are available
+    original_move - (i, j) where i and j are row and column
+    move - original_move converted to 1D
     """
     # [['x', 'None', 'o', 'x', 'x', 'o', 'None', 'None', 'x']] npr
     t = table.reshape(1, 9)[0]
@@ -46,12 +51,15 @@ def bot_random_move(ch, table):
 
 
 def generate_table():
+    """
+    Makes empty table
+    """
     return np.full((3,3 ), None)
 
 def check_table(table):
     """
-    table - 3x3 tabela
-    Vraca x ako je X dobio, o ako je O, None ako tabela nije popunjena, i Draw ako niko nije dobio
+    table - 3x3 table
+    Returns x if X wins, o if its O, None if table has open spots to paly, and Draw if its a draw
     """
     for i in range(3):
         row = table[i]
@@ -69,7 +77,13 @@ def check_table(table):
 
     main_diag = np.diag(table)
     second_diag = np.diag(np.fliplr(table))
+    
     if all([a=='x' for a in main_diag]):
+            return 'x'
+    elif all([a=='o' for a in main_diag]):
+        return 'o'
+
+    if all([a=='x' for a in second_diag]):
             return 'x'
     elif all([a=='o' for a in second_diag]):
         return 'o'
@@ -97,12 +111,17 @@ def get_table_state(table):
     return np.array(ret).reshape(t.shape)
 
 def get_random_data():
+    """
+    Gets data out of random plays by the bot_random_move fun and saves it in files
+    valid_moves -  by x and o where they have won the game 
+    valid_states - tables states of all the moves he has won (same length as valid_moves)
+    """
     # states = []
     valid_x_moves = []
     valid_o_moves = []
     valid_x_states = []
     valid_o_states = []
-    for _ in range(10000):
+    for j in range(100000):
         table = generate_table()
         i = 0
         state = None
@@ -132,6 +151,7 @@ def get_random_data():
         elif state == 'o':
             valid_o_moves.extend(o_moves)
             valid_o_states.extend(o_states)
+        print(j)
         # states.append(state)
 
     print(len(valid_x_moves), len(valid_x_states), len(valid_o_moves), len(valid_o_states))
@@ -144,9 +164,10 @@ def get_random_data():
     np.save('o_moves.npy', valid_o_moves)
     np.save('o_states.npy', valid_o_states)
 
-
-
-if __name__ == "__main__":
+def play():
+    """
+    Play against AI
+    """
     i = 0
     table = generate_table()
     state = check_table(table)
@@ -166,8 +187,11 @@ if __name__ == "__main__":
         i += 1
 
     if state == 'o':
-        print('O je pobedio')
+        print('O won the game')
     elif state == 'x':
-        print('X je pobedio')
+        print('X won the game')
     else:
         print('Nereseno!')
+
+if __name__ == "__main__":
+    play()

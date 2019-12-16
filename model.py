@@ -5,6 +5,10 @@ from collections import Counter
 
 
 def load_data():
+    """
+    y_train - one hot arrays out of 9 possible moves
+    x_moves and o_moves are stacked because the model learns from both x and o valid moves
+    """
     x_moves, o_moves = np.load('x_moves.npy'), np.load('o_moves.npy')
     x_states, o_states = np.load('x_states.npy'), np.load('o_states.npy')
 
@@ -30,6 +34,9 @@ def load_data():
 
 
 def generate_model():
+    """
+    Simple NN, mozda treba promenim
+    """
     model = keras.models.Sequential([
         keras.layers.Dense(128, input_shape=(9, ), activation=tf.nn.relu),
 
