@@ -35,7 +35,7 @@ def load_data():
 
 def generate_model():
     """
-    Simple NN, mozda treba promenim
+    Simple NN, mozda treba promenim jer je shit
     """
     model = keras.models.Sequential([
         keras.layers.Dense(128, input_shape=(9, ), activation=tf.nn.relu),
@@ -57,45 +57,13 @@ def generate_model():
 
     return model
 
-def generate_model2():
-    """
-    Simple NN, mozda treba promenim
-    """
-    model = keras.models.Sequential([
-        keras.layers.Dense(32, input_shape=(9, ), activation=tf.nn.relu),
-        
-        keras.layers.Dropout(0.2),
 
-        keras.layers.Dense(64, activation=tf.nn.relu),
 
-        keras.layers.Dropout(0.2),
-
-        keras.layers.Dense(128, activation=tf.nn.relu),
-
-        keras.layers.Dropout(0.2),
-
-        keras.layers.Dense(64, activation=tf.nn.relu),
-
-        keras.layers.Dropout(0.2),
-
-        keras.layers.Dense(32, input_shape=(9, ), activation=tf.nn.relu),
-        
-        keras.layers.Dropout(0.2),
-
-        keras.layers.Dense(16, input_shape=(9, ), activation=tf.nn.relu),
-        
-        keras.layers.Dropout(0.2),
-
-        keras.layers.Dense(9, activation=tf.nn.softmax)
-    ])
-
-    model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
-
-    return model
-
+def train_new_model():
+    x_train, y_train = load_data()
+    model = generate_model()
+    model.fit(x_train, y_train, epochs=5, batch_size=50)
+    model.save('ttt6k.h5')
 
 if __name__ == "__main__":
-    x_train, y_train = load_data()
-    model = generate_model2()
-    model.fit(x_train, y_train, epochs=10, batch_size=50)
-    model.save('ttt2.h5')
+    train_new_model()
