@@ -1,2 +1,2 @@
 # TicTacToeMl
-TicTacToe bot made with classic Machile Learning stuff 
+TicTacToe bot made with classic Machine Learning stuff 
